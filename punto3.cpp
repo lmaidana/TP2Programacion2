@@ -1,16 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <time.h>
 
 const int MAX = 10;
 
 typedef struct Cola
 {
-  int tope; //cantidad de elementos del vector
+  int tope;
   int principio;
   int fin;
-  int elementos[MAX] = {0}; //vector donde guardamos los valores aleatorios
+  int elementos[MAX] = {0};
 } STR_COLA;
 
 void crear(STR_COLA *queue);
@@ -23,33 +21,25 @@ int main()
 {
   STR_COLA cola;
   crear(&cola);
-  srand(time(NULL));
   int dato = 0;
   int i = 0;
-  char confirmar = 'n';
-
-  printf("Desea agregar un valor aleatorio a su cola? [S/N]: [ ]\b\b");
-  scanf(" %c", &confirmar);
-
-  while ((confirmar == 'S' || confirmar == 's') && i < MAX)
+  printf("Ingrese valor a agregar en la cola o 0 para terminar \b");
+  scanf(" %d", &dato);
+  while (dato != 0 && i < MAX)
   {
-
-    add(rand() % 1000, &cola);
+    add(dato, &cola);
     if (cola.tope < MAX)
     {
-      printf("Desea agregar un valor aleatorio a su cola? [S/N]: [ ]\b\b");
-      scanf(" %c", &confirmar);
+      printf("Ingrese valor a agregar en la cola o 0 para terminar \b");
+      scanf(" %d", &dato);
     }
     else
     {
       printf("La cola esta llena,tiene %d elementos\n", cola.tope);
     }
-
     i++;
   }
-
   print(&cola);
-
   return 0;
 }
 
@@ -96,6 +86,6 @@ void print(STR_COLA *queue)
   while (!isEmpty(*queue))
   {
     int valor = remove(queue);
-    printf("Valor aleatorio: %d\n", valor);
+    printf("Valor ingresado: %d\n", valor);
   }
 }

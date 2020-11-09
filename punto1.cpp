@@ -6,7 +6,6 @@
 #define FORMATO_LEGAJO "Legajo: %d\n"
 #define FECHA_NOTA "\tFecha:%hhd/%hhd/%d\tNota: %.2f \n"
 
-const int MAX_RUTA = 100;
 const int MAX_CARACTERES = 31;
 const int MAX_REGISTRO = 200;
 
@@ -65,22 +64,15 @@ size_t leer(STR_MATERIA *registro, FILE *file);
 size_t escribir(STR_MATERIA registro, FILE *file);
 size_t readAt(FILE *file, STR_MATERIA *registro, int posicion);
 STR_FECHA obtenerFecha(int formatoFecha);
-void tokenNull(const char *token, FILE *texto, FILE *binario);
-void textoBinario(const char *rutaTexto, const char *rutaBinaria, const char *separadores);
-void binarioTexto(const char *rutaTexto, const char *rutaBinaria);
 void create(STR_NODO **lista);
 bool isEmpty(STR_NODO *lista);
 STR_NODO *insertOrdered(STR_DATO valor, STR_NODO **lista);
-void print(STR_NODO *lista);
-void printDato(STR_DATO dato);
 void clearList(STR_NODO **lista);
 STR_DATO deleteFirst(STR_NODO **lista);
 int count(STR_NODO *listaAux);
 
 int main()
 {
-  // textoBinario("matematica.txt", "matematica.dat", ";\n");
-  // binarioTexto("promediosMatematicaTraducido.txt", "matematica.dat");
   FILE *materia = abrir("matematica.dat", "rb");
   FILE *promedios = abrir("promediosMatematica.dat", "wb");
   STR_MATERIA unRegistro, unAlumno;
@@ -126,11 +118,10 @@ int main()
         }
         i++;
       }
-      alumno.promedio = alumno.promedio / 2;
+      alumno.promedio = alumno.promedio / 2; //Acá calculé el promedio y lo guardé.
       fwrite(&alumno, sizeof(STR_PROMEDIO), 1, promedios);
     }
   }
-
   cerrar(materia);
   cerrar(promedios);
   clearList(&lista);
@@ -177,18 +168,6 @@ STR_NODO *insertOrdered(STR_DATO valor, STR_NODO **lista)
   }
 
   return nodo;
-}
-
-void print(STR_NODO *lista)
-{
-  STR_NODO *listaAux;
-  listaAux = lista;
-  printf("POSICION\t\tLEGAJO\n");
-  while (listaAux != NULL)
-  {
-    printf("%d\t\t%d\n", listaAux->dato.pos, listaAux->dato.legajo);
-    listaAux = listaAux->siguiente;
-  }
 }
 
 void clearList(STR_NODO **lista)
@@ -245,6 +224,7 @@ size_t leer(STR_MATERIA *registro, FILE *file)
 {
   return fread(registro, sizeof(STR_MATERIA), 1, file);
 }
+
 size_t escribir(STR_MATERIA registro, FILE *file)
 {
   return fwrite(&registro, sizeof(STR_MATERIA), 1, file);
@@ -263,102 +243,4 @@ STR_FECHA obtenerFecha(int formatoFecha)
   fecha.mes = (unsigned char)((formatoFecha % 10000) / 100);
   fecha.year = (unsigned short)(formatoFecha / 10000);
   return fecha;
-}
-
-void tokenNull(const char *token, FILE *texto, FILE *binario)
-{
-
-  if (token == NULL)
-  {
-    printf("Fallo parseo.\n");
-    cerrar(texto);
-    cerrar(binario);
-    exit(EXIT_FAILURE);
-  }
-  return;
-}
-
-//TXT A BIN:
-
-void textoBinario(const char *rutaTexto, const char *rutaBinaria, const char *separadores)
-{
-
-  FILE *texto = fopen(rutaTexto, "r");
-  if (!texto)
-  {
-    printf("No se pudo abrir el archivo de texto \n");
-    return;
-  }
-  FILE *binario = fopen(rutaBinaria, "wb");
-  if (!binario)
-  {
-    fclose(texto);
-    printf("No se pudo crear el archivo binario \n");
-    return;
-  }
-  STR_MATERIA unRegistro;
-
-  char linea[MAX_REGISTRO];
-  char *token = NULL;
-
-  while (fgets(linea, MAX_REGISTRO - 1, texto) != NULL)
-  {
-    token = strtok(linea, separadores);
-    tokenNull(token, texto, binario);
-    unRegistro.legajo = atoi(token);
-
-    token = strtok(NULL, separadores);
-    tokenNull(token, texto, binario);
-    unRegistro.fecha = atoi(token);
-
-    token = strtok(NULL, separadores);
-    tokenNull(token, texto, binario);
-    unRegistro.nota = (float)atof(token);
-
-    fwrite(&unRegistro, sizeof(STR_MATERIA), 1, binario);
-  }
-
-  fclose(texto);
-  fclose(binario);
-  texto = NULL;
-  binario = NULL;
-  if (token != NULL)
-  {
-    token = NULL;
-  }
-  return;
-}
-
-//BIN A TXT:
-
-////al igual con la anterior debo modificar el struct cada vez que quiera reutilizarla, y el formato global
-void binarioTexto(const char *rutaTexto, const char *rutaBinaria)
-{
-
-  FILE *texto = fopen(rutaTexto, "w");
-  if (!texto)
-  {
-    printf("No se pudo crear el archivo de texto \n");
-    return;
-  }
-  FILE *binario = fopen(rutaBinaria, "rb");
-  if (!binario)
-  {
-    fclose(texto);
-    printf("No se pudo abrir el archivo binario \n");
-    return;
-  }
-
-  STR_PROMEDIO unRegistro; //aca modificar
-  fread(&unRegistro, sizeof(STR_PROMEDIO), 1, binario);
-  while (!feof(binario))
-  {
-    fprintf(texto, " \t%d\t%f", unRegistro.legajo, unRegistro.promedio);
-    fread(&unRegistro, sizeof(STR_PROMEDIO), 1, binario);
-  }
-  fclose(texto);
-  fclose(binario);
-  texto = NULL;
-  binario = NULL;
-  return;
 }
