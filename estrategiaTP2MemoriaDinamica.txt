@@ -1,0 +1,34 @@
+0)ingrese la ruta del archivo de materias // int main(int argc, char *argv[])
+1)abrir el archivo de <prog2>.dat // archivo de materias
+2)recorremos archivo materias transaccional cantidad: 0 alumno a 1000. 
+3)crear lista 
+4)insertar ordenado en la lista str_dato: legajo + pos en el archivo de materias 
+
+5)Termino recorrida del archivo materias con lista completa.
+6)Recorremos lista.
+7)imprimir legajo a) buscamos en archivo <materias>.dat->  fecha y nota fseek:pos
+		  b) calcular promedio -> str_promedio unPromedio;
+		  c) abrir archivo alumnes.dat		
+		  c) ordenar burbujeo archivo alumnes.dat	
+		  d) buscamos en archivo alumnes.dat -> nombre , PUP: legajo 
+		  e) crear archivo promediosMateria.dat : STR_PROMEDIO
+		  f) cargar ordenado archivo promediosMateria.dat
+		  g)cerrar archivos
+8)clear lista
+9)fin ejercicio 1 			
+
+
+
+
+prog2.dat:
+12345678 20200803 8.5
+00000050 20200803 7.5	
+00000001 20200803 4
+12345678 20201017 5
+00000050 20201017 4
+00000001 20201017 2
+
+
+
+
+
